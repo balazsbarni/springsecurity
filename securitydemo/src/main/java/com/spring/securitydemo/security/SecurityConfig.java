@@ -4,6 +4,7 @@ import com.spring.securitydemo.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +16,11 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     CustomUserDetailService userDetailService;
+
+    @Bean
+    public AuthenticationManager authManager() throws Exception {
+        return  authenticationManager();
+    }
 
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
@@ -29,12 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/signup").permitAll()
+                .antMatchers(HttpMethod.POST, "/*/dummy/login").permitAll()
                 .antMatchers("/*/dummy/try/**").permitAll()
                 .antMatchers("/*/dummy/user/**").hasRole("USER")
                 .antMatchers("/*/dummy/admin/**").hasRole("ADMIN")
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+              //  .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailService));
     }
 }

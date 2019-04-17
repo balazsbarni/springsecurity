@@ -49,6 +49,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthenticationToken(HttpServletRequest request){
         String token = request.getHeader(HEADER_STRING);
         String username = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody().getSubject();
+        //claimet kivesz
+        String hello = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody().get("hello", String.class);
         UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
         //maga a User
         AppUser appUser = customUserDetailService.loadAppUserByUsername(username);
