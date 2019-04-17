@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SecurityConfig(CustomUserDetailService customUserDetailService) {
-        this.userDetailService = userDetailService;
+        this.userDetailService = customUserDetailService;
     }
 
     @Override
@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/dummy/user/**").hasRole("USER")
                 .antMatchers("/*/dummy/admin/**").hasRole("ADMIN")
                 .and()
-                .httpBasic();
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailService));
     }
 }
