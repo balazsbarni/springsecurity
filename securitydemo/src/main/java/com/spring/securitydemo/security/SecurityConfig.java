@@ -37,10 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/*/dummy/login").permitAll()
                 .antMatchers("/*/dummy/try/**").permitAll()
-                .antMatchers("/*/dummy/user/**").hasRole("USER")
+                .antMatchers("/*/dummy/user/**").authenticated()
+                .antMatchers("/*/dummy/user/**").hasRole("ADMIN")
                 .antMatchers("/*/dummy/admin/**").hasRole("ADMIN")
                 .and()
-              //  .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+              .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailService));
     }
 }
